@@ -1,0 +1,16 @@
+PODS:
+  - Tracker (1.2.0)
+
+DEPENDENCIES:
+  - Tracker (~> 1.1)
+
+SPEC REPOS:
+  https://github.com/wogaa/Specs.git:
+    - Tracker
+
+SPEC CHECKSUMS:
+  Tracker: 9882fe9273b48be2689ab545dba9026cad6ac19a
+
+PODFILE CHECKSUM: 4eeaa285e0bf49b780fd50287b5dd98cec1b7ed2
+
+COCOAPODS: 1.9.3
