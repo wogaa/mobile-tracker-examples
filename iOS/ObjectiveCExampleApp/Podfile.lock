@@ -1,5 +1,5 @@
 PODS:
-  - Tracker (1.2.0)
+  - Tracker (1.3.1)
 
 DEPENDENCIES:
   - Tracker (~> 1.1)
@@ -9,7 +9,7 @@ SPEC REPOS:
     - Tracker
 
 SPEC CHECKSUMS:
-  Tracker: 9882fe9273b48be2689ab545dba9026cad6ac19a
+  Tracker: 567699b4c6a691239b6545262a9f4c002e02292b
 
 PODFILE CHECKSUM: 4eeaa285e0bf49b780fd50287b5dd98cec1b7ed2
 

@@ -29,6 +29,7 @@ import Tracker from 'react-native-tracker';
 class App extends React.Component {
   componentDidMount() {
     Tracker.start('STAGING');
+    Tracker.trackScreenView('MainScreen');
   }
 
   render() {
