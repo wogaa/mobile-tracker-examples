@@ -29,7 +29,7 @@ namespace MultieplatformApp
 
         public class ENVIRONMENT
         {
-            public const string production = "snowplow.wogaa.sg";
+            public const string production = "snowplow-mobile.wogaa.sg";
             public const string staging = "snowplow.dcube.cloud";
         }
 
