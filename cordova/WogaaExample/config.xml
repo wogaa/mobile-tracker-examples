@@ -23,4 +23,6 @@
         <allow-intent href="itms-apps:*" />
         <preference name="SwiftVersion" value="5"/>
     </platform>
+    <preference name="android-minSdkVersion" value="25" />
+    <preference name="android-compileSdkVersion" value="30" />
 </widget>
