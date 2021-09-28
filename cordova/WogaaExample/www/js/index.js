@@ -34,7 +34,6 @@ function onDeviceReady() {
     document.getElementById("testButton2").addEventListener("click", check);
 
     window.plugins.wogaatracker.start("STAGING");
-    window.plugins.wogaatracker.trackScreenView("Testing -  Main Screen");
 }
 
 function successCallback(result) {
