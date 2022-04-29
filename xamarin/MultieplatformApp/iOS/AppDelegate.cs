@@ -6,7 +6,7 @@ namespace MultieplatformApp.iOS
     // The UIApplicationDelegate for the application. This class is responsible for launching the
     // User Interface of the application, as well as listening (and optionally responding) to application events from iOS.
     [Register("AppDelegate")]
-    public class AppDelegate : UIApplicationDelegate
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
         // class-level declarations
 
@@ -18,15 +18,9 @@ namespace MultieplatformApp.iOS
 
         public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
         {
+            global::Xamarin.Forms.Forms.Init();
+            LoadApplication(new App());
             App.Initialize();
-
-
-            if (!Snowplow.Tracker.Tracker.Instance.Started)
-            {
-                WogaaTracker.Init(
-                emitterUri: WogaaTracker.ENVIRONMENT.staging,
-                appId: "com.xamarin.multiplaform.ios");
-            }
 
             return true;
         }
@@ -43,14 +37,14 @@ namespace MultieplatformApp.iOS
         {
             // Use this method to release shared resources, save user data, invalidate timers and store the application state.
             // If your application supports background exection this method is called instead of WillTeworminate when the user quits.
-            WogaaTracker.OnSleep();
+            //WogaaTracker.OnSleep();
         }
 
         public override void WillEnterForeground(UIApplication application)
         {
             // Called as part of the transiton from background to active state.
             // Here you can undo many of the changes made on entering the background.
-            WogaaTracker.OnResume();
+            //WogaaTracker.OnResume();
         }
 
         public override void OnActivated(UIApplication application)

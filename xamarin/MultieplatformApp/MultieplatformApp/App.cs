@@ -1,4 +1,5 @@
 ﻿using System;
+using Snowplow.Tracker;
 using Xamarin.Forms;
 
 namespace MultieplatformApp
@@ -14,24 +15,38 @@ namespace MultieplatformApp
                 ServiceLocator.Instance.Register<IDataStore<Item>, MockDataStore>();
             else
                 ServiceLocator.Instance.Register<IDataStore<Item>, CloudDataStore>();
+
+
+            if (!Tracker.Instance.Started)
+            {
+                WogaaTracker.Init(
+                emitterUri: WogaaTracker.ENVIRONMENT.staging,
+                appId: "com.xamarin.multiplaform.ios");
+            }
         }
 
         protected override void OnStart()
         {
-            base.OnStart();
-            WogaaTracker.OnStart();
+            if (Tracker.Instance.Started)
+            {
+                Tracker.Instance.SetBackground(false);
+            }
         }
 
         protected override void OnSleep()
         {
-            base.OnSleep();
-            WogaaTracker.OnSleep();
+            if (Tracker.Instance.Started)
+            {
+                Tracker.Instance.SetBackground(true);
+            }
         }
 
         protected override void OnResume()
         {
-            base.OnResume();
-            WogaaTracker.OnResume();
+            if (Tracker.Instance.Started)
+            {
+                Tracker.Instance.SetBackground(false);
+            }
         }
     }
 }

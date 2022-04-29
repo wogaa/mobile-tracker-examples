@@ -14,11 +14,14 @@ using Snowplow.Tracker.Storage;
 using Snowplow.Tracker.PlatformExtensions;
 using System.Collections.Generic;
 using Snowplow.Tracker.Models.Contexts;
+using Xamarin.Forms;
 
 namespace MultieplatformApp
 {
     public static class WogaaTracker
     {
+        private static readonly string KEY_USER_ID = "userId";
+
         private static readonly string _trackerNamespace = "WogaaXamarinTracker";
         private static ClientSession _clientSession;
         private static LiteDBStorage _storage;
@@ -76,10 +79,11 @@ namespace MultieplatformApp
                 sendLimit: sendLimit,
                 stopPollIntervalMs: 1000,
                 sendSuccessMethod: EventSuccessCallback,
-                deviceOnlineMethod: SnowplowTrackerPlatformExtension.Current.IsDeviceOnline,
+                //deviceOnlineMethod: SnowplowTrackerPlatformExtension.Current.IsDeviceOnline,
                 l: logger);
 
-            var userId = SnowplowCore.Utils.GetGUID();
+            var userId = PropertyManager.GetStringValue(KEY_USER_ID, SnowplowCore.Utils.GetGUID());
+            PropertyManager.SaveKeyValue(KEY_USER_ID, userId);
 
             var subject = new Subject()
                 .SetPlatform(SnowplowCore.Models.Platform.Mob)
@@ -165,21 +169,23 @@ namespace MultieplatformApp
             SessionFailureCount = 0;
         }
 
-        public static void OnStart()
+        /// <summary>
+        /// Returns the current session index
+        /// </summary>
+        /// <returns>the session index</returns>
+        public static int GetClientSessionIndexCount()
         {
-            Instance.SetBackground(false);
+            return _clientSession != null ? _clientSession.SessionIndex : -1;
         }
 
-        public static void OnResume()
+        /// <summary>
+        /// Returns the current database event count
+        /// </summary>
+        /// <returns>the current count of events</returns>
+        public static int GetDatabaseEventCount()
         {
-            Instance.SetBackground(false);
+            return _storage != null ? _storage.TotalItems : -1;
         }
-
-        public static void OnSleep()
-        {
-            Instance.SetBackground(true);
-        }
-
         // --- Callbacks
 
         /// <summary>
@@ -204,7 +210,7 @@ namespace MultieplatformApp
                 .SetCustomContext(GetCustomContextList())
                 .Build());
             SessionMadeCount++;
-            Instance.Flush();
+            //Instance.Flush();
         }
 
         public static void TrackAppInstalledEvent()
@@ -223,7 +229,8 @@ namespace MultieplatformApp
                 .Build();
 
             Instance.Track(selfDescribing);
-            Instance.Flush();
+            SessionMadeCount++;
+            //Instance.Flush();
         }
 
         public static List<IContext> GetCustomContextList()
@@ -249,6 +256,55 @@ namespace MultieplatformApp
             this.schema = "iglu:com.snowplowanalytics.mobile/application/jsonschema/1-0-0";
             this.context = new SelfDescribingJson(this.schema, this.data);
             return this;
+        }
+    }
+
+    public static class PropertyManager
+    {
+        /// <summary>
+        /// Saves a key value pair
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <param name="value">The value</param>
+        public static async void SaveKeyValue(string key, object value)
+        {
+            Application.Current.Properties[key] = value;
+            await Application.Current.SavePropertiesAsync();
+        }
+
+        /// <summary>
+        /// Returns a string value for a key
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <returns>The value or an empty string by default</returns>
+        public static string GetStringValue(string key, string valueDefault = "")
+        {
+            try
+            {
+                var value = (string)Application.Current.Properties[key];
+                return value ?? valueDefault;
+            }
+            catch
+            {
+                return valueDefault;
+            }
+        }
+
+        /// <summary>
+        /// Returns a bool value for a key
+        /// </summary>
+        /// <param name="key">The key</param>
+        /// <returns>The value or false by default</returns>
+        public static bool GetBoolValue(string key)
+        {
+            try
+            {
+                return (bool)Application.Current.Properties[key];
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
